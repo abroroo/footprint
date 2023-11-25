@@ -11,6 +11,7 @@ import {
   fetchCars,
   fetchModels,
   fetchCarbonEmission,
+  fetchCarbonEmissionForTransports,
 } from "../utils/fetchData";
 
 const Home = () => {
@@ -26,10 +27,6 @@ const Home = () => {
 
   const originRef = useRef(null);
   const destinationRef = useRef(null);
-
-  const handleTransportChange = (e) => {
-    setSelectedTransport(e.target.value);
-  };
 
   const handleFromChange = (e) => {
     if (originRef.current) {
@@ -57,28 +54,6 @@ const Home = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    // Call the Directions API only when both from and to locations are set
-    if (from && to) {
-      // You can make other API calls or actions here before the Directions API call if needed
-      setIsSubmitting(true);
-      // Call Directions API
-      const directionsService = new window.google.maps.DirectionsService();
-      directionsService.route(
-        {
-          origin: from,
-          destination: to,
-          travelMode: window.google.maps.TravelMode.TRANSIT,
-        },
-        onDirectionsServiceChange
-      );
-
-      // await fetchCarbonEmission (distance);
-    }
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const directionsRequest = useMemo(handleSubmit, [from, to, isSubmitting]);
   // Memoize Autocomplete components
   const originAutocomplete = useMemo(() => {
     return (
@@ -122,40 +97,30 @@ const Home = () => {
   const [selectedTransport, setSelectedTransport] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [shouldFetchModels, setShouldFetchModels] = useState(true);
-  const [shouldFetchEmmission, setShouldFetchEmmission] = useState(false);
+
+  const handleTransportChange = (e) => {
+    setSelectedTransport(e.target.value);
+  };
 
   // get all cars
   const fetchCarsNow = async () => {
-    try {
-      const data = await fetchCars();
-      setCars(data.response);
-      //console.log("Data from the server:", data);
-      // Handle the data as needed
-    } catch (error) {
-      // Handle errors
-      //console.error("Error in fetchCars:", error);
-    }
+    const data = await fetchCars();
+    setCars(data.response);
+    //console.log("Data from the server:", data);
+    // Handle the data as needed
   };
 
   // get models
   const fetchModelsNow = async (selectedModel) => {
-    try {
-      const data = await fetchModels(selectedModel);
+    const data = await fetchModels(selectedModel);
 
-      const model = [];
-      data.response.map((ele) => {
-        model.push(ele[ele.length - 1]);
-      });
-      setModels(model);
+    const model = data.response.map((ele) => ele[ele.length - 1]);
+    setModels(model);
 
-      //console.log("Models data: ", model);
-      setShouldFetchModels(false);
-      //console.log("Data from the server:", data);
-      // Handle the data as needed
-    } catch (error) {
-      // Handle errors
-      //console.error("Error in fetchModels:", error);
-    }
+    //console.log("Models data: ", model);
+    setShouldFetchModels(false);
+    //console.log("Data from the server:", data);
+    // Handle the data as needed
   };
 
   //get Emmission
@@ -164,47 +129,82 @@ const Home = () => {
     selectedModel,
     distance
   ) => {
-    try {
-      console.log(
-        "slectedModel and distance in emssion fetch : ",
-        selectedModel,
-        distance
-      );
-      const data = await fetchCarbonEmission(
-        selectedTransport,
-        selectedModel,
-        distance
-      );
-      setEmission(data.response);
-      setShouldFetchModels(false);
-      // console.log("Data from the server:", data);
-      // Handle the data as needed
-    } catch (error) {
-      // Handle errors
-      //console.error("Error in fetchModels:", error);
-    }
+    const data = await fetchCarbonEmission(
+      selectedTransport,
+      selectedModel,
+      distance
+    );
+    setEmission(data.response);
+    console.log("Emission data: ", data.response);
+    setShouldFetchModels(false);
+    // console.log("Data from the server:", data);
+    // Handle the data as needed
+  };
+
+  const fetchCarbonEmissionForTransport = async (
+    slectedTransport,
+    distance
+  ) => {
+    const data = await fetchCarbonEmissionForTransports(
+      slectedTransport,
+      distance
+    );
+    setEmission(data.response);
+    console.log("Emission data: ", data.response);
   };
 
   useEffect(() => {
     fetchCarsNow();
-  }, []);
+    if (shouldFetchModels) {
+      fetchModelsNow(selectedTransport);
+    }
+  }, [shouldFetchModels, selectedTransport]);
 
-  if (shouldFetchModels) {
-    fetchModelsNow(selectedTransport);
-  }
-  if (shouldFetchEmmission) {
-    fetchCarbonEmmissionNow(selectedTransport, selectedModel, distance);
-  }
+  const handleSubmit = async () => {
+    // Call the Directions API only when both from and to locations are set
+    if (from && to) {
+      // You can make other API calls or actions here before the Directions API call if needed
+      setIsSubmitting(true);
+      // Call Directions API
+      const directionsService = new window.google.maps.DirectionsService();
+      directionsService.route(
+        {
+          origin: from,
+          destination: to,
+          travelMode: window.google.maps.TravelMode.TRANSIT,
+        },
+        onDirectionsServiceChange
+      );
+      // console.log(
+      //   "selectedTransport in the handle Submit: ",
+      //   selectedTransport
+      // );
+      if (
+        selectedTransport === "bus" ||
+        selectedTransport === "subway" ||
+        selectedTransport === "train" ||
+        selectedTransport === "motorcycle" ||
+        selectedTransport === "plane"
+      ) {
+        fetchCarbonEmissionForTransport(selectedTransport, distance);
+      } else {
+        fetchCarbonEmmissionNow(selectedTransport, selectedModel, distance);
+        // await fetchCarbonEmission (distance);
+      }
+    }
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const directionsRequest = useMemo(handleSubmit, [from, to, isSubmitting]);
 
   return (
     <div className="mx-auto w-screen">
       <Hero />
       <div className="flex flex-col mb-4 w-full container mx-auto px-5 h-screen mt-10">
         <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
-
           {/* Transport Type Dropdown */}
           <div className="bg-white flex items-center justify-between w-full h-[100px] px-10 py-5 rounded-full">
-            <div className="flex items-center gap-5">
+            <div className="flex flex-wrap items-center gap-5">
               <div className="flex items-center relative text-left">
                 <select
                   className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
@@ -223,10 +223,9 @@ const Home = () => {
                 {selectedTransport && (
                   <select
                     value={selectedModel}
-                    className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
+                    className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none ml-5"
                     onChange={(e) => {
                       setSelectedModel(e.target.value);
-                      setShouldFetchEmmission(true);
                     }}
                   >
                     {models.map((model, index) => (
@@ -256,30 +255,50 @@ const Home = () => {
               <div className="flex items-center relative text-left">
                 <select
                   className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
-                  value={selectedTransport}
-                  onChange={handleTransportChange}
+                  value="train"
+                  onChange={(e) => {
+                    setSelectedTransport(e.target.value);
+                  }}
                 >
-                  <option value="">Ship</option>
-                  <option>Model1</option>
-                  <option>Model2</option>
-                  <option>Model3</option>
+                  {" "}
+                  <option value="train">Train</option>
                 </select>
-                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="25"
-                    height="25"
-                    fillRule="currentColor"
-                    className="bi bi-arrow-down-short"
-                    viewBox="0 0 16 16"
-                  >
-                    {" "}
-                    <path
-                      fill-rule="evenodd"
-                      d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
-                    />{" "}
-                  </svg>
-                </div>
+                <select
+                  className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
+                  value="plane"
+                  onChange={(e) => {
+                    setSelectedTransport(e.target.value);
+                  }}
+                >
+                  <option value="plane">Plane</option>
+                </select>
+                <select
+                  className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
+                  value="subway"
+                  onChange={(e) => {
+                    setSelectedTransport(e.target.value);
+                  }}
+                >
+                  <option value="subway">Subway</option>
+                </select>
+                <select
+                  className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
+                  value="bus"
+                  onChange={(e) => {
+                    setSelectedTransport(e.target.value);
+                  }}
+                >
+                  <option value="bus">Bus</option>
+                </select>
+                <select
+                  className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
+                  value="motorcycle"
+                  onChange={(e) => {
+                    setSelectedTransport(e.target.value);
+                  }}
+                >
+                  <option value="motorcycle">Motorcycle</option>
+                </select>
               </div>
             </div>
 
@@ -312,7 +331,6 @@ const Home = () => {
           </div>
 
           <div className="mt-10 rounded-md">
-
             <GoogleMap
               mapContainerStyle={{
                 width: "800px",

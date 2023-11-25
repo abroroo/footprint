@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Hero from "../components/Hero/Hero";
 import { useKakaoLoader } from "react-kakao-maps-sdk";
 import { getDistance } from "geolib";
 import {
@@ -70,8 +71,9 @@ const Home = () => {
   };
 
   return (
-    <div className="container mx-auto mt-8 w-screen h-screen">
-      <div className="flex justify-between items-center mb-4 w-full h-full">
+    <div className="mx-auto mt-8 w-screen">
+      <Hero />
+      <div className="flex justify-between items-center mb-4 w-full h-full container mx-auto px-5 py-5">
         {/* Transport Type Dropdown */}
         <div className="flex flex-wrap w-[50%]  mt-10">
           <select

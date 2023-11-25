@@ -125,10 +125,11 @@ const Home = () => {
   }, [to]);
 
   return (
-    <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
-      <div className="mx-auto mt-8 w-screen">
-        <Hero />
-        <div className="flex flex-col mb-4 w-full container mx-auto px-5 h-screen mt-10">
+    <div className="mx-auto w-screen">
+      <Hero />
+      <div className="flex flex-col mb-4 w-full container mx-auto px-5 h-screen mt-10">
+        <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
+
           {/* Transport Type Dropdown */}
           <div className="bg-white flex items-center justify-between w-full h-[100px] px-10 py-5 rounded-full">
             <div className="flex items-center gap-5">
@@ -197,6 +198,7 @@ const Home = () => {
           </div>
 
           <div className="mt-10 rounded-md">
+
             <GoogleMap
               mapContainerStyle={{ width: "800px", height: "600px", borderRadius: '30px' }}
               center={{ lat: 37.4979, lng: 127.0276 }}
@@ -215,9 +217,11 @@ const Home = () => {
               )}
             </GoogleMap>
           </div>
-        </div>
+        </LoadScript>
+
       </div>
-    </LoadScript>);
+    </div>
+  );
 };
 
 export default Home;

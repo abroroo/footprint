@@ -4,9 +4,9 @@ import Logo from '../../assets/logo.svg'
 import Button from '../Button/Button'
 const Header = () => {
     return (
-        <nav className='flex items-center justify-between container mx-auto px-5 py-5'>
+        <nav className='flex items-center justify-between px-5'>
             <div>
-                <Link to='/' className='flex items-center gap-3 text-lg text-white font-semibold'>
+                <Link to='/' className='flex items-center gap-3 text-xl tracking-wide text-white font-semibold'>
                     <img src={Logo} className='w-[40px]' alt='logo' /> CarbonLite
                 </Link>
             </div>

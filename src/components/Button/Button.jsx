@@ -6,7 +6,7 @@ const Button = ({ type, text }) => {
     } else if (type === 'gost') {
         return <button className='text-lg bg-white font-semibold rounded-md text-black border-button-green inline-block min-w-[130px] py-1 border-4 box-border hover:opacity-75 '>{text}</button>
     } else if (type === 'secondary') {
-        return <button className='text-lg bg-button-green font-semibold rounded-md text-white border-transparent inline-block min-w-[130px] py-1 border-4 box-border hover:opacity-75 '>{text}</button>
+        return <button className='text-lg bg-dark-green font-semibold rounded-md text-white border-transparent inline-block min-w-[130px] py-1 border-4 box-border hover:opacity-75 '>{text}</button>
     }
     else {
         return <button className='text-lg font-semibold rounded-md text-white border-transparent inline-block min-w-[130px] py-1 border-4 box-border hover:opacity-75'>{text}</button>

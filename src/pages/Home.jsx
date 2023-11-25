@@ -17,12 +17,21 @@ import {
   fetchCarbonEmissionForTransports,
 } from "../utils/fetchData";
 
+const libraries = ["places"];
+
 const Home = () => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [distance, setDistance] = useState(0);
   const [directionResponse, setDirectionResponse] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cars, setCars] = useState([]);
+  const [models, setModels] = useState([]);
+  const [emission, setEmission] = useState(0);
+  const [selectedTransport, setSelectedTransport] = useState("");
+  const [selectedModel, setSelectedModel] = useState("");
+  const [shouldFetchModels, setShouldFetchModels] = useState(true);
+
   const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
 
   const originRef = useRef(null);
@@ -64,9 +73,10 @@ const Home = () => {
         <input
           id="origin-input"
           type="text"
-          className="border-2 p-2 rounded-xl border-black"
+          className="p-2 rounded-md"
           value={from}
           onChange={(e) => setFrom(e.target.value)}
+          placeholder="Departure from"
         />
       </Autocomplete>
     );
@@ -84,18 +94,12 @@ const Home = () => {
           className="border-2 p-2 rounded-xl"
           value={to}
           onChange={(e) => setTo(e.target.value)}
+          placeholder="Arrive at"
         />
       </Autocomplete>
     );
   }, [to]);
 
-  // UI fetching data from server
-  const [cars, setCars] = useState([]);
-  const [models, setModels] = useState([]);
-  const [emission, setEmission] = useState(0);
-  const [selectedTransport, setSelectedTransport] = useState("");
-  const [selectedModel, setSelectedModel] = useState("");
-  const [shouldFetchModels, setShouldFetchModels] = useState(true);
 
   const handleTransportChange = (e) => {
     setSelectedTransport(e.target.value);
@@ -208,7 +212,7 @@ const Home = () => {
         height: '100%',
       }}>
         <div className="flex flex-col justify-between mb-4 w-full container mx-auto px-2 md:px-5 h-[850px] rounded-xl shadow-inner drop-shadow-md bg-slate-600/30 backdrop-blur-md">
-          <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
+          <LoadScript googleMapsApiKey={apiKey} libraries={libraries}>
             {/* Transport Type Dropdown */}
             <div className=" flex items-center justify-between w-full h-[100px] px-10 py-4">
               <div className="flex items-center gap-5">
@@ -242,7 +246,7 @@ const Home = () => {
                       ))}
                     </select>
                   )}
-                  <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="25"
@@ -260,7 +264,7 @@ const Home = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center relative text-left">
+                <div className="flex items-center relative text-left">
                   <div className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2">
                     Train
                     <input
@@ -310,19 +314,18 @@ const Home = () => {
 
               {/* Search Inputs and Submit Button */}
               <div className="flex items-center">
-                <div className="flex-col items-center justify-center">
-                  <div className="flex items-center justify-center m-5">
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-center">
                     <label className="block text-sm font-medium mr-2">
                       From:
                     </label>
 
                     {originAutocomplete}
                   </div>
-                </div>
-
-                <div className="flex items-center justify-center m-5">
-                  <label className="block text-sm font-medium mr-2">To:</label>
-                  {destinationAutocomplete}
+                  <div className="flex items-center justify-center">
+                    <label className="block text-sm font-medium mr-2">To:</label>
+                    {destinationAutocomplete}
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-center">

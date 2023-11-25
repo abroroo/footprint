@@ -1,75 +1,48 @@
-import React, { useState, useEffect } from "react";
-import Hero from "../components/Hero/Hero";
-import { useKakaoLoader } from "react-kakao-maps-sdk";
-import { getDistance } from "geolib";
+import React, { useState, useMemo } from "react";
 import {
+  Autocomplete,
   DirectionsService,
   GoogleMap,
   LoadScript,
-} from "react-google-maps-api";
+  DirectionsRenderer,
+} from "@react-google-maps/api";
+import Hero from "../components/Hero/Hero";
 
 const Home = () => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [selectedTransport, setSelectedTransport] = useState("");
-  const [distance, setDistance] = useState("");
-  const [xFrom, setXFrom] = useState("");
-  const [yFrom, setYFrom] = useState("");
-  const [xTo, setXTo] = useState("");
-  const [yTo, setYTo] = useState("");
-
-  const handleFromChange = (e) => {
-    setFrom(e.target.value);
-  };
-
-  const handleToChange = (e) => {
-    setTo(e.target.value);
-  };
+  const [distance, setDistance] = useState(0);
+  const [directionResponse, setDirectionResponse] = useState(null);
 
   const handleTransportChange = (e) => {
     setSelectedTransport(e.target.value);
   };
 
-  useEffect(() => {
-    // Dynamically load the Google Maps script
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCtQzD_8wZ1e0Ghi9ESi48sAvKvqwy2iZw&callback=initMap`;
-    script.async = true;
-    script.defer = true;
-    window.initMap = () => {}; // Define a dummy callback function for the API script
-    document.head.appendChild(script);
-  }, []);
+  const handleFromChange = (place) => {
+    setFrom(place.formatted_address);
+  };
 
-  const fetchDirections = async () => {
-    if (!window.google) {
-      alert("Google Maps JavaScript API library is not loaded!");
-      return;
+  const handleToChange = (place) => {
+    setTo(place.formatted_address);
+  };
+
+  const onDirectionsServiceChange = (result, status) => {
+    if (status === "OK") {
+      console.log(result);
+      setDirectionResponse(result);
+      setDistance(result.routes[0].legs[0].distance.value);
+      console.log(result.routes[0].legs[0].distance.text);
+      console.log(result.routes[0].legs[0].distance.value);
+    } else {
+      console.log(status);
     }
-
-    const directionsService = await new window.google.maps.DirectionsService();
-
-    directionsService.route(
-      {
-        origin: from,
-        destination: to,
-        travelMode: window.google.maps.TravelMode.TRANSIT, // or 'WALKING', 'BICYCLING', 'TRANSIT'
-      },
-      (result, status) => {
-        if (status === window.google.maps.DirectionsStatus.OK) {
-          console.log(result);
-          console.log(result.routes[0].legs[0].distance.text);
-        } else {
-          //alert("Failed to fetch directions");
-          console.log(status);
-        }
-      }
-    );
   };
 
   const fetchData = async () => {
     try {
       const response = await fetch(
-        "https://065c-116-127-186-66.ngrok-free.app/emission/api/motorcycle/23"
+        `https://065c-116-127-186-66.ngrok-free.app/emission/api/motorcycle/${distance}`
       );
 
       if (!response.ok) {
@@ -83,110 +56,167 @@ const Home = () => {
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    fetchDirections();
-    fetchData();
+  const handleSubmit = async () => {
+    // Call the Directions API only when both from and to locations are set
+    if (from && to) {
+      // You can make other API calls or actions here before the Directions API call if needed
+
+      // Call Directions API
+      const directionsService = new window.google.maps.DirectionsService();
+      directionsService.route(
+        {
+          origin: from,
+          destination: to,
+          travelMode: window.google.maps.TravelMode.TRANSIT,
+        },
+        onDirectionsServiceChange
+      );
+
+      await fetchData();
+    }
   };
 
+  const directionsRequest = useMemo(handleSubmit, [from, to]);
+
+  // Memoize Autocomplete components
+  const originAutocomplete = useMemo(() => {
+    return (
+      <Autocomplete
+        onLoad={(autocomplete) => {}}
+        //onPlaceChanged={(place) => handleFromChange(place)}
+      >
+        <input
+          id="origin-input"
+          type="text"
+          className="border p-2 rounded"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+        />
+      </Autocomplete>
+    );
+  }, [from]);
+
+  const destinationAutocomplete = useMemo(() => {
+    return (
+      <Autocomplete
+        onLoad={(autocomplete) => {}}
+        //onPlaceChanged={(place) => handleToChange(place)}
+      >
+        <input
+          id="destination-input"
+          type="text"
+          className="border p-2 rounded"
+          value={to}
+          onChange={(e) => setTo(e.target.value)}
+        />
+      </Autocomplete>
+    );
+  }, [to]);
+
   return (
-    <div className="mx-auto mt-8 w-screen">
-      <Hero />
-      <div className="flex justify-between items-center mb-4 w-full h-full container mx-auto px-5 py-5">
-        {/* Transport Type Dropdown */}
-        <div className="flex flex-wrap w-[50%]  mt-10">
-          <select
-            className="w-30 h-20 m-2  border p-2 rounded"
-            value={selectedTransport}
-            onChange={handleTransportChange}
-          >
-            <option value="">Car</option>
-            <option>Model1</option>
-            <option>Model2</option>
-            <option>Model3</option>
-          </select>
-
-          <select
-            className="w-30 h-20 m-2  border p-2 rounded"
-            value={selectedTransport}
-            onChange={handleTransportChange}
-          >
-            <option value="">Ship</option>
-            <option>Model1</option>
-            <option>Model2</option>
-            <option>Model3</option>
-          </select>
-
-          <select
-            className="w-30 h-20 m-2  border p-2 rounded"
-            value={selectedTransport}
-            onChange={handleTransportChange}
-          >
-            <option value="">Air</option>
-            <option>Model1</option>
-            <option>Model2</option>
-            <option>Model3</option>
-          </select>
-
-          <select
-            className="w-30 h-20  m-2 border p-2 rounded"
-            value={selectedTransport}
-            onChange={handleTransportChange}
-          >
-            <option value="">Bus</option>
-            <option>Model1</option>
-            <option>Model2</option>
-            <option>Model3</option>
-          </select>
-
-          <select
-            className="w-30 h-20  m-2 border p-2 rounded"
-            value={selectedTransport}
-            onChange={handleTransportChange}
-          >
-            <option value="">Subway</option>
-            <option>Model1</option>
-            <option>Model2</option>
-            <option>Model3</option>
-          </select>
-        </div>
-
-        {/* Search Inputs and Submit Button */}
-        <div className="flex-col w-[50%] p-10 items-center justify-center">
-          <div className="flex items-center justify-center m-5">
-            <label className="block text-sm font-medium text-gray-700 mr-2">
-              From:
-            </label>
-            <input
-              type="text"
-              className="border p-2 rounded"
-              value={from}
-              onChange={handleFromChange}
-            />
-          </div>
-
-          <div className="flex items-center justify-center m-5">
-            <label className="block text-sm font-medium text-gray-700 mr-2">
-              To:
-            </label>
-            <input
-              type="text"
-              className="border p-2 rounded"
-              value={to}
-              onChange={handleToChange}
-            />
-          </div>
-          <div className="flex items-center justify-center">
-            <button
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 border p-2"
-              onClick={handleSubmit}
+    <LoadScript
+      googleMapsApiKey="AIzaSyCtQzD_8wZ1e0Ghi9ESi48sAvKvqwy2iZw"
+      libraries={["places"]}
+    >
+      <div className="mx-auto mt-8 w-screen">
+        <div className="flex justify-between items-center mb-4 w-full h-full container mx-auto px-5 py-5">
+          {/* ... Other parts of your code remain unchanged ... */}
+          <div className="flex flex-wrap w-[50%]  mt-10">
+            <select
+              className="w-30 h-20 m-2  border p-2 rounded"
+              value={selectedTransport}
+              onChange={handleTransportChange}
             >
-              Submit
-            </button>
+              <option value="">Car</option>
+              <option>Model1</option>
+              <option>Model2</option>
+              <option>Model3</option>
+            </select>
+
+            <select
+              className="w-30 h-20 m-2  border p-2 rounded"
+              value={selectedTransport}
+              onChange={handleTransportChange}
+            >
+              <option value="">Ship</option>
+              <option>Model1</option>
+              <option>Model2</option>
+              <option>Model3</option>
+            </select>
+
+            <select
+              className="w-30 h-20 m-2  border p-2 rounded"
+              value={selectedTransport}
+              onChange={handleTransportChange}
+            >
+              <option value="">Air</option>
+              <option>Model1</option>
+              <option>Model2</option>
+              <option>Model3</option>
+            </select>
+
+            <select
+              className="w-30 h-20  m-2 border p-2 rounded"
+              value={selectedTransport}
+              onChange={handleTransportChange}
+            >
+              <option value="">Bus</option>
+              <option>Model1</option>
+              <option>Model2</option>
+              <option>Model3</option>
+            </select>
+
+            <select
+              className="w-30 h-20  m-2 border p-2 rounded"
+              value={selectedTransport}
+              onChange={handleTransportChange}
+            >
+              <option value="">Subway</option>
+              <option>Model1</option>
+              <option>Model2</option>
+              <option>Model3</option>
+            </select>
+
+            <GoogleMap
+              mapContainerStyle={{ width: "400px", height: "400px" }}
+              center={{ lat: 37.4979, lng: 127.0276 }}
+              zoom={15}
+            >
+              <DirectionsService
+                options={directionsRequest}
+                callback={onDirectionsServiceChange}
+              />{" "}
+              <DirectionsRenderer options={{ directions: directionResponse }} />
+            </GoogleMap>
+          </div>
+          {/* Search Inputs and Submit Button */}
+          <div className="flex-col w-[50%] p-10 items-center justify-center">
+            <div className="flex items-center justify-center m-5">
+              <label className="block text-sm font-medium text-gray-700 mr-2">
+                From:
+              </label>
+              {originAutocomplete}
+            </div>
+
+            <div className="flex items-center justify-center m-5">
+              <label className="block text-sm font-medium text-gray-700 mr-2">
+                To:
+              </label>
+              {destinationAutocomplete}
+            </div>
+
+            <div className="flex items-center justify-center">
+              <button
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 border p-2"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </LoadScript>
   );
 };
 

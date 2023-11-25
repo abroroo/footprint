@@ -57,6 +57,7 @@ const Home = () => {
       (result, status) => {
         if (status === window.google.maps.DirectionsStatus.OK) {
           console.log(result);
+          console.log(result.routes[0].legs[0].distance.text);
         } else {
           //alert("Failed to fetch directions");
           console.log(status);
@@ -65,9 +66,27 @@ const Home = () => {
     );
   };
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "https://065c-116-127-186-66.ngrok-free.app/emission/api/motorcycle/23"
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("CO2 emission: ", result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     fetchDirections();
+    fetchData();
   };
 
   return (

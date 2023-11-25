@@ -199,7 +199,7 @@ const Home = () => {
   return (
     <div className="mx-auto w-screen">
       <Hero />
-      <section className="min-h-screen flex justify-center items-center" style={{
+      <section id="mapsection" className="min-h-screen flex justify-center items-center" style={{
         backgroundImage: `url(${carbonBg})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",

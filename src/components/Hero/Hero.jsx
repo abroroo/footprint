@@ -4,6 +4,7 @@ import Button from '../Button/Button'
 import herobg from '../../assets/bg.png'
 import HeadingImg from '../../assets/text.png'
 import Header from '../Header/Header'
+import { Link } from 'react-router-dom'
 const Hero = () => {
     return (
         <section className='min-h-screen flex justify-center items-center' style={{
@@ -20,7 +21,7 @@ const Hero = () => {
                     <div className='flex flex-col w-1/2 gap-6 ml-0 md:ml-[100px]'>
                         <img className='w-[350px] rounded-md' src={HeadingImg} alt='Hero bg' />
                         <p className='text-lg text-white max-w-[500px] mb-10'>Use our interactive calculator to learn your carbon footprint and actions to take to reduce it.</p>
-                        <Button type='primary' text='Get Start' />
+                        <a href='#mapsection'> <Button type='primary' text='Get Start' /></a>
                     </div>
                     <div className='w-1/2'>
                         <div className='w-[400px] md:w-[600px] ml-0 md:ml-auto'>

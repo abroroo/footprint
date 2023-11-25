@@ -7,10 +7,10 @@ const Header = () => {
         <nav className='flex items-center justify-between container mx-auto px-5 py-5'>
             <div>
                 <Link to='/' className='flex items-center gap-3 text-lg text-white font-semibold'>
-                    <img src={Logo} className='w-[40px]' alt='logo' /> Carbon
+                    <img src={Logo} className='w-[40px]' alt='logo' /> CarbonLite
                 </Link>
             </div>
-            <ul className='flex items-center gap-10 text-lg font-semibold text-white'>
+            <ul className='hidden md:flex items-center gap-10 text-lg font-semibold text-white'>
                 <li>
                     <Link className='hover:opacity-50' to="/calculate">Calculate</Link>
                 </li>

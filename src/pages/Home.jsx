@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Home = () => {
   const [from, setFrom] = useState("");
@@ -23,13 +23,18 @@ const Home = () => {
     console.log("To:", to);
     console.log("Selected Transport:", selectedTransport);
   };
+
+  // useEffect(() => {
+  //   window.Kakao.init("b9df9088c5ece13a17822dc4f4e7e595");
+  // }, []);
+
   return (
     <div className="container mx-auto mt-8 w-screen h-screen">
       <div className="flex justify-between items-center mb-4 w-full h-full">
         {/* Transport Type Dropdown */}
-        <div className="flex w-[50%]  mt-10">
+        <div className="flex flex-wrap w-[50%]  mt-10">
           <select
-            className="w-full m-2  border p-2 rounded"
+            className="w-30 h-20 m-2  border p-2 rounded"
             value={selectedTransport}
             onChange={handleTransportChange}
           >
@@ -40,7 +45,7 @@ const Home = () => {
           </select>
 
           <select
-            className="w-full m-2  border p-2 rounded"
+            className="w-30 h-20 m-2  border p-2 rounded"
             value={selectedTransport}
             onChange={handleTransportChange}
           >
@@ -51,7 +56,7 @@ const Home = () => {
           </select>
 
           <select
-            className="w-full m-2  border p-2 rounded"
+            className="w-30 h-20 m-2  border p-2 rounded"
             value={selectedTransport}
             onChange={handleTransportChange}
           >
@@ -62,7 +67,7 @@ const Home = () => {
           </select>
 
           <select
-            className="w-full  m-2 border p-2 rounded"
+            className="w-30 h-20  m-2 border p-2 rounded"
             value={selectedTransport}
             onChange={handleTransportChange}
           >
@@ -73,7 +78,7 @@ const Home = () => {
           </select>
 
           <select
-            className="w-full  m-2 border p-2 rounded"
+            className="w-30 h-20  m-2 border p-2 rounded"
             value={selectedTransport}
             onChange={handleTransportChange}
           >

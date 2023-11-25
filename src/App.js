@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Header from './components/Header/Header';
 
 
+
 const App = () => (
   <Router>
     <div className='bg-gradient-background min-h-screen w-screen box-border'>

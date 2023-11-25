@@ -7,6 +7,9 @@ import {
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import Hero from "../components/Hero/Hero";
+import carbonBg from '../assets/leavesbg.png'
+import earthImg from '../assets/Save-Earth-Free-PNG-Image 1.svg'
+
 import {
   fetchCars,
   fetchModels,
@@ -14,11 +17,8 @@ import {
 } from "../utils/fetchData";
 
 const Home = () => {
-  // FUNCTIONALITY Google Maps API
-
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-
   const [distance, setDistance] = useState(0);
   const [directionResponse, setDirectionResponse] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -118,7 +118,6 @@ const Home = () => {
   const [cars, setCars] = useState([]);
   const [models, setModels] = useState([]);
   const [emission, setEmission] = useState(0);
-
   const [selectedTransport, setSelectedTransport] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [shouldFetchModels, setShouldFetchModels] = useState(true);
@@ -199,144 +198,172 @@ const Home = () => {
   return (
     <div className="mx-auto w-screen">
       <Hero />
-      <div className="flex flex-col mb-4 w-full container mx-auto px-5 h-screen mt-10">
-        <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
-
-          {/* Transport Type Dropdown */}
-          <div className="bg-white flex items-center justify-between w-full h-[100px] px-10 py-5 rounded-full">
-            <div className="flex items-center gap-5">
-              <div className="flex items-center relative text-left">
-                <select
-                  className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
-                  value={selectedTransport}
-                  onChange={(e) => {
-                    setSelectedTransport(e.target.value);
-                    setShouldFetchModels(true);
-                  }}
-                >
-                  {cars.map((car, index) => (
-                    <option key={index} value={car}>
-                      {car}
-                    </option>
-                  ))}
-                </select>
-                {selectedTransport && (
+      <section className="min-h-screen flex justify-center items-center" style={{
+        backgroundImage: `url(${carbonBg})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: 'center center',
+        width: '100%',
+        height: '100%',
+      }}>
+        <div className="flex flex-col justify-between mb-4 w-full container mx-auto px-2 md:px-5 h-[850px] rounded-xl shadow-inner drop-shadow-md bg-slate-600/30 backdrop-blur-md">
+          <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
+            {/* Transport Type Dropdown */}
+            <div className=" flex items-center justify-between w-full h-[100px] px-10 py-4">
+              <div className="flex items-center gap-5">
+                <div className="flex items-center relative text-left">
                   <select
-                    value={selectedModel}
-                    className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
+                    className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl m-2 border-2 appearance-none"
+                    value={selectedTransport}
                     onChange={(e) => {
-                      setSelectedModel(e.target.value);
-                      setShouldFetchEmmission(true);
+                      setSelectedTransport(e.target.value);
+                      setShouldFetchModels(true);
                     }}
                   >
-                    {models.map((model, index) => (
-                      <option key={index} value={model}>
-                        {model}
+                    {cars.map((car, index) => (
+                      <option key={index} value={car}>
+                        {car}
                       </option>
                     ))}
                   </select>
-                )}
-                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="25"
-                    height="25"
-                    fillRule="currentColor"
-                    className="bi bi-arrow-down-short"
-                    viewBox="0 0 16 16"
-                  >
-                    {" "}
-                    <path
-                      fillRule="evenodd"
-                      d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
-                    />{" "}
-                  </svg>
+                  {selectedTransport && (
+                    <select
+                      value={selectedModel}
+                      className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2"
+                      onChange={(e) => {
+                        setSelectedModel(e.target.value);
+                      }}
+                    >
+                      {models.map((model, index) => (
+                        <option key={index} value={model}>
+                          {model}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="25"
+                      height="25"
+                      fillRule="currentColor"
+                      className="bi bi-arrow-down-short"
+                      viewBox="0 0 16 16"
+                    >
+                      {" "}
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
+                      />{" "}
+                    </svg>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center relative text-left">
-                <select
-                  className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
-                  value={selectedTransport}
-                  onChange={handleTransportChange}
-                >
-                  <option value="">Ship</option>
-                  <option>Model1</option>
-                  <option>Model2</option>
-                  <option>Model3</option>
-                </select>
-                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="25"
-                    height="25"
-                    fillRule="currentColor"
-                    className="bi bi-arrow-down-short"
-                    viewBox="0 0 16 16"
-                  >
-                    {" "}
-                    <path
-                      fill-rule="evenodd"
-                      d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
-                    />{" "}
-                  </svg>
-                </div>
-              </div>
-            </div>
 
-            {/* Search Inputs and Submit Button */}
-            <div className="flex items-center">
-              <div className="flex-col items-center justify-center">
+                <div className="flex flex-wrap items-center relative text-left">
+                  <div className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2">
+                    Train
+                    <input
+                      value="train"
+                      type="radio"
+                      name="transportation"
+                      onChange={(e) => {
+                        setSelectedTransport(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2">
+                    Plane
+                    <input
+                      value="plane"
+                      type="radio"
+                      name="transportation"
+                      onChange={(e) => {
+                        setSelectedTransport(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2">
+                    Subway
+                    <input
+                      value="subway"
+                      type="radio"
+                      name="transportation"
+                      onChange={(e) => {
+                        setSelectedTransport(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2">
+                    Bus
+                    <input
+                      type="radio"
+                      name="transportation"
+                      value="bus"
+                      onChange={(e) => {
+                        setSelectedTransport(e.target.value);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Search Inputs and Submit Button */}
+              <div className="flex items-center">
+                <div className="flex-col items-center justify-center">
+                  <div className="flex items-center justify-center m-5">
+                    <label className="block text-sm font-medium mr-2">
+                      From:
+                    </label>
+
+                    {originAutocomplete}
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-center m-5">
-                  <label className="block text-sm font-medium mr-2">
-                    From:
-                  </label>
+                  <label className="block text-sm font-medium mr-2">To:</label>
+                  {destinationAutocomplete}
+                </div>
 
-                  {originAutocomplete}
+                <div className="flex items-center justify-center">
+                  <button
+                    className="bg-dark-green text-white py-[10px] px-6 rounded-xl hover:opacity-75 border-2"
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </button>
                 </div>
               </div>
-
-              <div className="flex items-center justify-center m-5">
-                <label className="block text-sm font-medium mr-2">To:</label>
-                {destinationAutocomplete}
-              </div>
-
-              <div className="flex items-center justify-center">
-                <button
-                  className="bg-dark-green text-white py-[10px] px-6 rounded-xl hover:opacity-75 border-2"
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </button>
+            </div>
+            <div className="mt-10 rounded-md flex items-end justify-between w-full px-10">
+              <GoogleMap
+                mapContainerStyle={{
+                  width: "800px",
+                  height: "600px",
+                  borderRadius: "30px",
+                  marginBottom: '50px'
+                }}
+                center={{ lat: 37.4979, lng: 127.0276 }}
+                zoom={15}
+              >
+                {!directionResponse && isSubmitting && (
+                  <DirectionsService
+                    options={directionsRequest}
+                    callback={onDirectionsServiceChange}
+                  />
+                )}
+                {directionResponse && (
+                  <DirectionsRenderer
+                    options={{ directions: directionResponse }}
+                  />
+                )}
+              </GoogleMap>
+              <div className="">
+                <img className="w-[550px]" src={earthImg} alt='plant' />
               </div>
             </div>
-          </div>
-
-          <div className="mt-10 rounded-md">
-
-            <GoogleMap
-              mapContainerStyle={{
-                width: "800px",
-                height: "600px",
-                borderRadius: "30px",
-              }}
-              center={{ lat: 37.4979, lng: 127.0276 }}
-              zoom={15}
-            >
-              {!directionResponse && isSubmitting && (
-                <DirectionsService
-                  options={directionsRequest}
-                  callback={onDirectionsServiceChange}
-                />
-              )}
-              {directionResponse && (
-                <DirectionsRenderer
-                  options={{ directions: directionResponse }}
-                />
-              )}
-            </GoogleMap>
-          </div>
-        </LoadScript>
-      </div>
+          </LoadScript>
+        </div>
+      </section>
     </div>
   );
 };

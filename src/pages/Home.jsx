@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useKakaoLoader } from "react-kakao-maps-sdk";
+import { getDistance } from "geolib";
 
 const Home = () => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [selectedTransport, setSelectedTransport] = useState("");
+  const [distance, setDistance] = useState("");
+  const [xFrom, setXFrom] = useState("");
+  const [yFrom, setYFrom] = useState("");
+  const [xTo, setXTo] = useState("");
+  const [yTo, setYTo] = useState("");
 
   const handleFromChange = (e) => {
     setFrom(e.target.value);
@@ -17,16 +24,42 @@ const Home = () => {
     setSelectedTransport(e.target.value);
   };
 
-  const handleSubmit = () => {
-    // Add your logic for handling the form submission here
-    console.log("From:", from);
-    console.log("To:", to);
-    console.log("Selected Transport:", selectedTransport);
+  const [loading, error] = useKakaoLoader({
+    appkey: "88fa5e46979c83c2b9f77cf0c4da1025",
+    libraries: ["clusterer", "drawing", "services"],
+  });
+
+  const getDataForTo = (data, status, pagination) => {
+    if (status === window.kakao.maps.services.Status.OK) {
+      // No need to extract only address names, keep the entire data
+      console.log("This is to address result: ", data[0].x, data[0].y);
+      setXTo(data[0].x);
+      setYTo(data[0].y);
+    }
   };
 
-  // useEffect(() => {
-  //   window.Kakao.init("b9df9088c5ece13a17822dc4f4e7e595");
-  // }, []);
+  const getDataForFrom = (data, status, pagination) => {
+    if (status === window.kakao.maps.services.Status.OK) {
+      // No need to extract only address names, keep the entire data
+      console.log("This is from address result: ", data[0].x, data[0].y);
+      setXFrom(data[0].x);
+      setYFrom(data[0].y);
+    }
+  };
+
+  const handleSubmit = async () => {
+    const ps1 = new window.kakao.maps.services.Geocoder();
+    const ps2 = new window.kakao.maps.services.Geocoder();
+    ps1.addressSearch(from, getDataForFrom);
+    ps2.addressSearch(to, getDataForTo);
+
+    const distanceI = await getDistance(
+      { latitude: xFrom, longitude: yFrom },
+      { latitude: xTo, longitude: yTo }
+    );
+    setDistance(distanceI);
+    console.log("Distance is : ", distanceI + " meters");
+  };
 
   return (
     <div className="container mx-auto mt-8 w-screen h-screen">

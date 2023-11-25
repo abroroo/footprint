@@ -12,7 +12,7 @@ const App = () => (
   <Router>
     <div className='bg-gradient-background min-h-screen  box-border'>
       <div className=''>
-        {/* <Header /> */}
+        <Header />
         <Routes>
 
           <Route path="/" element={<Home />} />

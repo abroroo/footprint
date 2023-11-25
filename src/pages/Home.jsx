@@ -6,7 +6,6 @@ import {
   LoadScript,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import Hero from "../components/Hero/Hero";
 
 const Home = () => {
   const [from, setFrom] = useState("");
@@ -14,6 +13,8 @@ const Home = () => {
   const [selectedTransport, setSelectedTransport] = useState("");
   const [distance, setDistance] = useState(0);
   const [directionResponse, setDirectionResponse] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
 
   const handleTransportChange = (e) => {
     setSelectedTransport(e.target.value);
@@ -60,7 +61,7 @@ const Home = () => {
     // Call the Directions API only when both from and to locations are set
     if (from && to) {
       // You can make other API calls or actions here before the Directions API call if needed
-
+      setIsSubmitting(true);
       // Call Directions API
       const directionsService = new window.google.maps.DirectionsService();
       directionsService.route(
@@ -76,7 +77,7 @@ const Home = () => {
     }
   };
 
-  const directionsRequest = useMemo(handleSubmit, [from, to]);
+  const directionsRequest = useMemo(handleSubmit, [from, to, isSubmitting]);
 
   // Memoize Autocomplete components
   const originAutocomplete = useMemo(() => {
@@ -114,10 +115,7 @@ const Home = () => {
   }, [to]);
 
   return (
-    <LoadScript
-      googleMapsApiKey="AIzaSyCtQzD_8wZ1e0Ghi9ESi48sAvKvqwy2iZw"
-      libraries={["places"]}
-    >
+    <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
       <div className="mx-auto mt-8 w-screen">
         <div className="flex justify-between items-center mb-4 w-full h-full container mx-auto px-5 py-5">
           {/* ... Other parts of your code remain unchanged ... */}
@@ -178,15 +176,21 @@ const Home = () => {
             </select>
 
             <GoogleMap
-              mapContainerStyle={{ width: "400px", height: "400px" }}
+              mapContainerStyle={{ width: "800px", height: "400px" }}
               center={{ lat: 37.4979, lng: 127.0276 }}
               zoom={15}
             >
-              <DirectionsService
-                options={directionsRequest}
-                callback={onDirectionsServiceChange}
-              />{" "}
-              <DirectionsRenderer options={{ directions: directionResponse }} />
+              {!directionResponse && isSubmitting && (
+                <DirectionsService
+                  options={directionsRequest}
+                  callback={onDirectionsServiceChange}
+                />
+              )}
+              {directionResponse && (
+                <DirectionsRenderer
+                  options={{ directions: directionResponse }}
+                />
+              )}
             </GoogleMap>
           </div>
           {/* Search Inputs and Submit Button */}

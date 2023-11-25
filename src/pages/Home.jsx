@@ -99,7 +99,7 @@ const Home = () => {
         <input
           id="origin-input"
           type="text"
-          className="border p-2 rounded"
+          className="border-2 p-2 rounded-xl border-black"
           value={from}
           onChange={(e) => setFrom(e.target.value)}
         />
@@ -116,7 +116,7 @@ const Home = () => {
         <input
           id="destination-input"
           type="text"
-          className="border p-2 rounded"
+          className="border-2 p-2 rounded-xl"
           value={to}
           onChange={(e) => setTo(e.target.value)}
         />
@@ -134,7 +134,7 @@ const Home = () => {
             <div className="flex items-center gap-5">
               <div className="flex items-center relative text-left">
                 <select
-                  className="h-12 w-[140px] text-white text-xl font-semibold bg-button-green px-5 rounded-xl appearance-none"
+                  className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
                   value={selectedTransport}
                   onChange={handleTransportChange}
                 >
@@ -149,7 +149,7 @@ const Home = () => {
               </div>
               <div className="flex items-center relative text-left">
                 <select
-                  className="h-12 w-[140px] text-white text-xl font-semibold bg-button-green px-5 rounded-xl appearance-none"
+                  className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
                   value={selectedTransport}
                   onChange={handleTransportChange}
                 >
@@ -166,11 +166,11 @@ const Home = () => {
 
 
             {/* Search Inputs and Submit Button */}
-            <div className="flex p-10 items-center justify-center">
+            <div className="flex items-center">
 
-              <div className="flex-col w-[50%] p-10 items-center justify-center">
+              <div className="flex-col items-center justify-center">
                 <div className="flex items-center justify-center m-5">
-                  <label className="block text-sm font-medium text-gray-700 mr-2">
+                  <label className="block text-sm font-medium mr-2">
                     From:
                   </label>
 
@@ -179,7 +179,7 @@ const Home = () => {
               </div>
 
               <div className="flex items-center justify-center m-5">
-                <label className="block text-sm font-medium text-gray-700 mr-2">
+                <label className="block text-sm font-medium mr-2">
                   To:
                 </label>
                 {destinationAutocomplete}
@@ -187,7 +187,7 @@ const Home = () => {
 
               <div className="flex items-center justify-center">
                 <button
-                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 border p-2"
+                  className="bg-dark-green text-white py-[10px] px-6 rounded-xl hover:opacity-75 border-2"
                   onClick={handleSubmit}
                 >
                   Submit
@@ -196,9 +196,9 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="mt-20">
+          <div className="mt-10 rounded-md">
             <GoogleMap
-              mapContainerStyle={{ width: "800px", height: "400px" }}
+              mapContainerStyle={{ width: "800px", height: "600px", borderRadius: '30px' }}
               center={{ lat: 37.4979, lng: 127.0276 }}
               zoom={15}
             >

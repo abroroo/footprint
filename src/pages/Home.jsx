@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useKakaoLoader } from "react-kakao-maps-sdk";
 import { getDistance } from "geolib";
+import {
+  DirectionsService,
+  GoogleMap,
+  LoadScript,
+} from "react-google-maps-api";
 
 const Home = () => {
   const [from, setFrom] = useState("");
@@ -24,41 +29,44 @@ const Home = () => {
     setSelectedTransport(e.target.value);
   };
 
-  const [loading, error] = useKakaoLoader({
-    appkey: "88fa5e46979c83c2b9f77cf0c4da1025",
-    libraries: ["clusterer", "drawing", "services"],
-  });
+  useEffect(() => {
+    // Dynamically load the Google Maps script
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCtQzD_8wZ1e0Ghi9ESi48sAvKvqwy2iZw&callback=initMap`;
+    script.async = true;
+    script.defer = true;
+    window.initMap = () => {}; // Define a dummy callback function for the API script
+    document.head.appendChild(script);
+  }, []);
 
-  const getDataForTo = (data, status, pagination) => {
-    if (status === window.kakao.maps.services.Status.OK) {
-      // No need to extract only address names, keep the entire data
-      console.log("This is to address result: ", data[0].x, data[0].y);
-      setXTo(data[0].x);
-      setYTo(data[0].y);
+  const fetchDirections = async () => {
+    if (!window.google) {
+      alert("Google Maps JavaScript API library is not loaded!");
+      return;
     }
-  };
 
-  const getDataForFrom = (data, status, pagination) => {
-    if (status === window.kakao.maps.services.Status.OK) {
-      // No need to extract only address names, keep the entire data
-      console.log("This is from address result: ", data[0].x, data[0].y);
-      setXFrom(data[0].x);
-      setYFrom(data[0].y);
-    }
-  };
+    const directionsService = await new window.google.maps.DirectionsService();
 
-  const handleSubmit = async () => {
-    const ps1 = new window.kakao.maps.services.Geocoder();
-    const ps2 = new window.kakao.maps.services.Geocoder();
-    ps1.addressSearch(from, getDataForFrom);
-    ps2.addressSearch(to, getDataForTo);
-
-    const distanceI = await getDistance(
-      { latitude: xFrom, longitude: yFrom },
-      { latitude: xTo, longitude: yTo }
+    directionsService.route(
+      {
+        origin: from,
+        destination: to,
+        travelMode: window.google.maps.TravelMode.TRANSIT, // or 'WALKING', 'BICYCLING', 'TRANSIT'
+      },
+      (result, status) => {
+        if (status === window.google.maps.DirectionsStatus.OK) {
+          console.log(result);
+        } else {
+          //alert("Failed to fetch directions");
+          console.log(status);
+        }
+      }
     );
-    setDistance(distanceI);
-    console.log("Distance is : ", distanceI + " meters");
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    fetchDirections();
   };
 
   return (

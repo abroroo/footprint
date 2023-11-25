@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import {
   Autocomplete,
   DirectionsService,
@@ -7,11 +7,18 @@ import {
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import Hero from "../components/Hero/Hero";
+import {
+  fetchCars,
+  fetchModels,
+  fetchCarbonEmission,
+} from "../utils/fetchData";
 
 const Home = () => {
+  // FUNCTIONALITY Google Maps API
+
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [selectedTransport, setSelectedTransport] = useState("");
+
   const [distance, setDistance] = useState(0);
   const [directionResponse, setDirectionResponse] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,23 +57,6 @@ const Home = () => {
     }
   };
 
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `https://065c-116-127-186-66.ngrok-free.app/emission/api/motorcycle/${distance}`
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-
-  //     const result = await response.json();
-  //     console.log("CO2 emission: ", result);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
   const handleSubmit = async () => {
     // Call the Directions API only when both from and to locations are set
     if (from && to) {
@@ -83,7 +73,7 @@ const Home = () => {
         onDirectionsServiceChange
       );
 
-      // await fetchData();
+      // await fetchCarbonEmission (distance);
     }
   };
 
@@ -124,6 +114,88 @@ const Home = () => {
     );
   }, [to]);
 
+  // UI fetching data from server
+  const [cars, setCars] = useState([]);
+  const [models, setModels] = useState([]);
+  const [emission, setEmission] = useState(0);
+
+  const [selectedTransport, setSelectedTransport] = useState("");
+  const [selectedModel, setSelectedModel] = useState("");
+  const [shouldFetchModels, setShouldFetchModels] = useState(true);
+  const [shouldFetchEmmission, setShouldFetchEmmission] = useState(false);
+
+  // get all cars
+  const fetchCarsNow = async () => {
+    try {
+      const data = await fetchCars();
+      setCars(data.response);
+      //console.log("Data from the server:", data);
+      // Handle the data as needed
+    } catch (error) {
+      // Handle errors
+      //console.error("Error in fetchCars:", error);
+    }
+  };
+
+  // get models
+  const fetchModelsNow = async (selectedModel) => {
+    try {
+      const data = await fetchModels(selectedModel);
+
+      const model = [];
+      data.response.map((ele) => {
+        model.push(ele[ele.length - 1]);
+      });
+      setModels(model);
+
+      //console.log("Models data: ", model);
+      setShouldFetchModels(false);
+      //console.log("Data from the server:", data);
+      // Handle the data as needed
+    } catch (error) {
+      // Handle errors
+      //console.error("Error in fetchModels:", error);
+    }
+  };
+
+  //get Emmission
+  const fetchCarbonEmmissionNow = async (
+    selectedTransport,
+    selectedModel,
+    distance
+  ) => {
+    try {
+      console.log(
+        "slectedModel and distance in emssion fetch : ",
+        selectedModel,
+        distance
+      );
+      const data = await fetchCarbonEmission(
+        selectedTransport,
+        selectedModel,
+        distance
+      );
+      setEmission(data.response);
+      setShouldFetchModels(false);
+      // console.log("Data from the server:", data);
+      // Handle the data as needed
+    } catch (error) {
+      // Handle errors
+      //console.error("Error in fetchModels:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCarsNow();
+  }, []);
+
+  if (shouldFetchModels) {
+    fetchModelsNow(selectedTransport);
+  }
+  if (shouldFetchEmmission) {
+    fetchCarbonEmmissionNow(selectedTransport, selectedModel, distance);
+  }
+
   return (
     <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
       <div className="mx-auto mt-8 w-screen">
@@ -136,15 +208,48 @@ const Home = () => {
                 <select
                   className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
                   value={selectedTransport}
-                  onChange={handleTransportChange}
+                  onChange={(e) => {
+                    setSelectedTransport(e.target.value);
+                    setShouldFetchModels(true);
+                  }}
                 >
-                  <option value="">Car</option>
-                  <option>Model1</option>
-                  <option>Model2</option>
-                  <option>Model3</option>
+                  {cars.map((car, index) => (
+                    <option key={index} value={car}>
+                      {car}
+                    </option>
+                  ))}
                 </select>
+                {selectedTransport && (
+                  <select
+                    value={selectedModel}
+                    className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none"
+                    onChange={(e) => {
+                      setSelectedModel(e.target.value);
+                      setShouldFetchEmmission(true);
+                    }}
+                  >
+                    {models.map((model, index) => (
+                      <option key={index} value={model}>
+                        {model}
+                      </option>
+                    ))}
+                  </select>
+                )}
                 <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fillRule="currentColor" className="bi bi-arrow-down-short" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" /> </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    fillRule="currentColor"
+                    className="bi bi-arrow-down-short"
+                    viewBox="0 0 16 16"
+                  >
+                    {" "}
+                    <path
+                      fillRule="evenodd"
+                      d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
+                    />{" "}
+                  </svg>
                 </div>
               </div>
               <div className="flex items-center relative text-left">
@@ -159,15 +264,26 @@ const Home = () => {
                   <option>Model3</option>
                 </select>
                 <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fillRule="currentColor" className="bi bi-arrow-down-short" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" /> </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    fillRule="currentColor"
+                    className="bi bi-arrow-down-short"
+                    viewBox="0 0 16 16"
+                  >
+                    {" "}
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
+                    />{" "}
+                  </svg>
                 </div>
               </div>
             </div>
 
-
             {/* Search Inputs and Submit Button */}
             <div className="flex items-center">
-
               <div className="flex-col items-center justify-center">
                 <div className="flex items-center justify-center m-5">
                   <label className="block text-sm font-medium mr-2">
@@ -179,9 +295,7 @@ const Home = () => {
               </div>
 
               <div className="flex items-center justify-center m-5">
-                <label className="block text-sm font-medium mr-2">
-                  To:
-                </label>
+                <label className="block text-sm font-medium mr-2">To:</label>
                 {destinationAutocomplete}
               </div>
 
@@ -198,7 +312,11 @@ const Home = () => {
 
           <div className="mt-10 rounded-md">
             <GoogleMap
-              mapContainerStyle={{ width: "800px", height: "600px", borderRadius: '30px' }}
+              mapContainerStyle={{
+                width: "800px",
+                height: "600px",
+                borderRadius: "30px",
+              }}
               center={{ lat: 37.4979, lng: 127.0276 }}
               zoom={15}
             >
@@ -215,9 +333,14 @@ const Home = () => {
               )}
             </GoogleMap>
           </div>
+
+          <div>
+            <h1 className="text-32">{emission}</h1>
+          </div>
         </div>
       </div>
-    </LoadScript>);
+    </LoadScript>
+  );
 };
 
 export default Home;

@@ -36,7 +36,7 @@ const Home = () => {
     script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCtQzD_8wZ1e0Ghi9ESi48sAvKvqwy2iZw&callback=initMap`;
     script.async = true;
     script.defer = true;
-    window.initMap = () => {}; // Define a dummy callback function for the API script
+    window.initMap = () => { }; // Define a dummy callback function for the API script
     document.head.appendChild(script);
   }, []);
 
@@ -92,99 +92,84 @@ const Home = () => {
   return (
     <div className="mx-auto mt-8 w-screen">
       <Hero />
-      <div className="flex justify-between items-center mb-4 w-full h-full container mx-auto px-5 py-5">
+      <div className="flex justify-between mb-4 w-full container mx-auto px-5 h-screen mt-10">
         {/* Transport Type Dropdown */}
-        <div className="flex flex-wrap w-[50%]  mt-10">
-          <select
-            className="w-30 h-20 m-2  border p-2 rounded"
-            value={selectedTransport}
-            onChange={handleTransportChange}
-          >
-            <option value="">Car</option>
-            <option>Model1</option>
-            <option>Model2</option>
-            <option>Model3</option>
-          </select>
+        <div className="bg-white flex items-center justify-between w-full h-[100px] px-10 py-5 rounded-full">
+          <div className="flex items-center gap-5">
 
-          <select
-            className="w-30 h-20 m-2  border p-2 rounded"
-            value={selectedTransport}
-            onChange={handleTransportChange}
-          >
-            <option value="">Ship</option>
-            <option>Model1</option>
-            <option>Model2</option>
-            <option>Model3</option>
-          </select>
-
-          <select
-            className="w-30 h-20 m-2  border p-2 rounded"
-            value={selectedTransport}
-            onChange={handleTransportChange}
-          >
-            <option value="">Air</option>
-            <option>Model1</option>
-            <option>Model2</option>
-            <option>Model3</option>
-          </select>
-
-          <select
-            className="w-30 h-20  m-2 border p-2 rounded"
-            value={selectedTransport}
-            onChange={handleTransportChange}
-          >
-            <option value="">Bus</option>
-            <option>Model1</option>
-            <option>Model2</option>
-            <option>Model3</option>
-          </select>
-
-          <select
-            className="w-30 h-20  m-2 border p-2 rounded"
-            value={selectedTransport}
-            onChange={handleTransportChange}
-          >
-            <option value="">Subway</option>
-            <option>Model1</option>
-            <option>Model2</option>
-            <option>Model3</option>
-          </select>
-        </div>
-
-        {/* Search Inputs and Submit Button */}
-        <div className="flex-col w-[50%] p-10 items-center justify-center">
-          <div className="flex items-center justify-center m-5">
-            <label className="block text-sm font-medium text-gray-700 mr-2">
-              From:
-            </label>
-            <input
-              type="text"
-              className="border p-2 rounded"
-              value={from}
-              onChange={handleFromChange}
-            />
+            <div className="flex items-center relative text-left">
+              <select
+                className="h-12 w-[140px] text-white text-xl font-semibold bg-button-green px-5 rounded-xl appearance-none"
+                value={selectedTransport}
+                onChange={handleTransportChange}
+              >
+                <option value="">Car</option>
+                <option>Model1</option>
+                <option>Model2</option>
+                <option>Model3</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" /> </svg>
+              </div>
+            </div>
+            <div className="flex items-center relative text-left">
+              <select
+                className="h-12 w-[140px] text-white text-xl font-semibold bg-button-green px-5 rounded-xl appearance-none"
+                value={selectedTransport}
+                onChange={handleTransportChange}
+              >
+                <option value="">Ship</option>
+                <option>Model1</option>
+                <option>Model2</option>
+                <option>Model3</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" /> </svg>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center justify-center m-5">
-            <label className="block text-sm font-medium text-gray-700 mr-2">
-              To:
-            </label>
-            <input
-              type="text"
-              className="border p-2 rounded"
-              value={to}
-              onChange={handleToChange}
-            />
-          </div>
-          <div className="flex items-center justify-center">
-            <button
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 border p-2"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
+
+          {/* Search Inputs and Submit Button */}
+          <div className="flex w-[50%] p-10 items-center justify-center">
+            <div className="flex items-center justify-center m-5">
+              <label className="block text-sm font-medium text-gray-700 mr-2">
+                From:
+              </label>
+              <input
+                type="text"
+                className="border-2 p-2 border-button-green px-5 rounded-xl"
+                value={from}
+                placeholder="Enter an address.."
+                onChange={handleFromChange}
+              />
+            </div>
+
+
+
+            <div className="flex items-center justify-center m-5">
+              <label className="block text-sm font-medium text-gray-700 mr-2">
+                To:
+              </label>
+              <input
+                type="text"
+                className="border-2 p-2 border-button-green px-5 rounded-xl"
+                value={to}
+                placeholder="Enter an address.."
+                onChange={handleToChange}
+              />
+            </div>
+            <div className="flex items-center justify-center">
+              <button
+                className="text-lg bg-button-green font-semibold rounded-md text-white border-transparent inline-block min-w-[130px] py-1 border-4 box-border hover:opacity-75 "
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   );

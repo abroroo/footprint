@@ -73,7 +73,7 @@ const Home = () => {
         <input
           id="origin-input"
           type="text"
-          className="p-2 rounded-md"
+          className="py-3 px-4 w-[250px] rounded-md drop-shadow-md"
           value={from}
           onChange={(e) => setFrom(e.target.value)}
           placeholder="Departure from"
@@ -91,7 +91,7 @@ const Home = () => {
         <input
           id="destination-input"
           type="text"
-          className="border-2 p-2 rounded-xl"
+          className="py-3 px-4 w-[250px] rounded-md drop-shadow-md"
           value={to}
           onChange={(e) => setTo(e.target.value)}
           placeholder="Arrive at"
@@ -216,56 +216,77 @@ const Home = () => {
             {/* Transport Type Dropdown */}
             <div className=" flex items-center justify-between w-full h-[100px] px-10 py-4">
               <div className="flex items-center gap-5">
-                <div className="flex items-center relative text-left">
-                  <select
-                    className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl m-2 border-2 appearance-none"
-                    value={selectedTransport}
-                    onChange={(e) => {
-                      setSelectedTransport(e.target.value);
-                      setShouldFetchModels(true);
-                    }}
-                  >
-                    {cars.map((car, index) => (
-                      <option key={index} value={car}>
-                        {car}
-                      </option>
-                    ))}
-                  </select>
-                  {selectedTransport && (
+                <div className="flex flex-col gap-3 text-left">
+                  <div className="relative">
                     <select
-                      value={selectedModel}
-                      className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2"
+                      className="h-12 w-[200px] text-black text-xl font-semibold bg-white rounded-xl drop-shadow-md flex items-center justify-between px-5 appearance-none"
+                      value={selectedTransport}
                       onChange={(e) => {
-                        setSelectedModel(e.target.value);
+                        setSelectedTransport(e.target.value);
+                        setShouldFetchModels(true);
                       }}
                     >
-                      {models.map((model, index) => (
-                        <option key={index} value={model}>
-                          {model}
+                      {cars.map((car, index) => (
+                        <option key={index} value={car}>
+                          {car}
                         </option>
                       ))}
                     </select>
-                  )}
-                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="25"
-                      height="25"
-                      fillRule="currentColor"
-                      className="bi bi-arrow-down-short"
-                      viewBox="0 0 16 16"
-                    >
-                      {" "}
-                      <path
-                        fillRule="evenodd"
-                        d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
-                      />{" "}
-                    </svg>
+                    <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="25"
+                        height="25"
+                        fillRule="currentColor"
+                        className="bi bi-arrow-down-short"
+                        viewBox="0 0 16 16"
+                      >
+                        {" "}
+                        <path
+                          fillRule="evenodd"
+                          d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
+                        />{" "}
+                      </svg>
+                    </div>
                   </div>
+                  {selectedTransport && (
+                    <div className="relative">
+
+                      <select
+                        value={selectedModel}
+                        className="h-12 w-[200px] text-black text-xl font-semibold bg-white rounded-xl drop-shadow-md flex items-center justify-between px-5 appearance-none"
+                        onChange={(e) => {
+                          setSelectedModel(e.target.value);
+                        }}
+                      >
+                        {models.map((model, index) => (
+                          <option key={index} value={model}>
+                            {model}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-white">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="25"
+                          height="25"
+                          fillRule="currentColor"
+                          className="bi bi-arrow-down-short"
+                          viewBox="0 0 16 16"
+                        >
+                          {" "}
+                          <path
+                            fillRule="evenodd"
+                            d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
+                          />{" "}
+                        </svg>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex items-center relative text-left">
-                  <div className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2">
+                <div className="grid grid-cols-2 gap-3 relative text-left">
+                  <div className="h-12 w-[200px] text-black text-xl font-semibold bg-white rounded-xl drop-shadow-md flex items-center justify-between px-5 appearance-none">
                     Train
                     <input
                       value="train"
@@ -276,7 +297,7 @@ const Home = () => {
                       }}
                     />
                   </div>
-                  <div className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2">
+                  <div className="h-12 w-[200px] text-black text-xl font-semibold bg-white rounded-xl drop-shadow-md flex items-center justify-between px-5 appearance-none">
                     Plane
                     <input
                       value="plane"
@@ -287,7 +308,7 @@ const Home = () => {
                       }}
                     />
                   </div>
-                  <div className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2">
+                  <div className="h-12 w-[200px] text-black text-xl font-semibold bg-white rounded-xl drop-shadow-md flex items-center justify-between px-5 appearance-none">
                     Subway
                     <input
                       value="subway"
@@ -298,7 +319,7 @@ const Home = () => {
                       }}
                     />
                   </div>
-                  <div className="h-12 w-[140px] text-black text-xl font-semibold bg-white px-5 rounded-xl border-2 appearance-none m-2">
+                  <div className="h-12 w-[200px] text-black text-xl font-semibold bg-white rounded-xl drop-shadow-md flex items-center justify-between px-5 appearance-none">
                     Bus
                     <input
                       type="radio"
@@ -313,24 +334,24 @@ const Home = () => {
               </div>
 
               {/* Search Inputs and Submit Button */}
-              <div className="flex items-center">
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-center">
-                    <label className="block text-sm font-medium mr-2">
+              <div className="flex items-center gap-5">
+                <div className="flex flex-col items-end gap-3">
+                  <div className="flex items-center">
+                    <label className="block text-lg font-bold mr-2">
                       From:
                     </label>
 
                     {originAutocomplete}
                   </div>
-                  <div className="flex items-center justify-center">
-                    <label className="block text-sm font-medium mr-2">To:</label>
+                  <div className="flex items-center">
+                    <label className="block text-lg font-bold mr-2">To:</label>
                     {destinationAutocomplete}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-center">
                   <button
-                    className="bg-dark-green text-white py-[10px] px-6 rounded-xl hover:opacity-75 border-2"
+                    className="bg-dark-green text-white py-[40px] px-6 rounded-xl hover:opacity-75 w-[150px] text-xl font-bold uppercase hover:scale-105 transition-all duration-150"
                     onClick={handleSubmit}
                   >
                     Submit

@@ -56,3 +56,23 @@ export const fetchCarbonEmission = async (car, model, distance) => {
         console.error("Error fetching data:", error);
     }
 };
+
+
+
+export const fetchCarbonEmissionForTransports = async (transport, distance) => {
+    try {
+        const response = await fetch(
+            `https://065c-116-127-186-66.ngrok-free.app/api/v1/emission?transport=${transport}&distance=${distance}`
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+};
+

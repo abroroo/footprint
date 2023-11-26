@@ -2,10 +2,21 @@ import React from 'react'
 import heroImg from '../../assets/tree.svg'
 import Button from '../Button/Button'
 import herobg from '../../assets/bg.png'
-import HeadingImg from '../../assets/text.png'
 import Header from '../Header/Header'
-import { Link } from 'react-router-dom'
+import TextTransition, { presets } from 'react-text-transition';
+
+const TEXTS = ['Planet', 'Nature'];
+
 const Hero = () => {
+    const [index, setIndex] = React.useState(0);
+
+    React.useEffect(() => {
+        const intervalId = setInterval(
+            () => setIndex((index) => index + 1),
+            3000,
+        );
+        return () => clearTimeout(intervalId);
+    }, []);
     return (
         <section className='min-h-screen flex justify-center items-center' style={{
             backgroundImage: `url(${herobg})`,
@@ -19,7 +30,9 @@ const Hero = () => {
                 <Header />
                 <div className='flex flex-col md:flex-row justify-between md:pt-[100px] gap-2'>
                     <div className='flex flex-col w-1/2 gap-6 ml-0 md:ml-[100px]'>
-                        <img className='w-[350px] rounded-md' src={HeadingImg} alt='Hero bg' />
+                        <h1 className='text-5xl md:text-7xl max-w-[350px] text-white font-bold'>
+                            Save the <span className='text-dark-green'><TextTransition springConfig={presets.stiff}>{TEXTS[index % TEXTS.length]}</TextTransition></span>
+                        </h1>
                         <p className='text-lg text-white max-w-[500px] mb-10'>Use our interactive calculator to learn your carbon footprint and actions to take to reduce it.</p>
                         <a href='#mapsection'> <Button type='primary' text='Get Start' /></a>
                     </div>

@@ -10,7 +10,7 @@ const Header = () => {
                     <img src={Logo} className='w-[40px]' alt='logo' /> CarbonLite
                 </Link>
             </div>
-            <ul className='hidden md:flex items-center gap-10 text-lg font-semibold text-white'>
+            {/* <ul className='hidden md:flex items-center gap-10 text-lg font-semibold text-white'>
                 <li>
                     <Link className='hover:opacity-50' to="/calculate">Calculate</Link>
                 </li>
@@ -20,11 +20,15 @@ const Header = () => {
                 <li>
                     <Link className='hover:opacity-50' to="/contact">Contact</Link>
                 </li>
-            </ul>
+            </ul> */}
             <div className='flex items-center gap-5'>
+                <Link to='/signin'>
+                    <Button type='' text='Sign In' />
+                </Link>
+                <Link to='/signup'>
+                    <Button type='secondary' text='Sign Up' />
+                </Link>
 
-                <Button type='' text='Log In' />
-                <Button type='secondary' text='Sign Up' />
             </div>
 
         </nav>

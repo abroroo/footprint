@@ -1,7 +1,7 @@
 // utils/fetchData.js
 
 export const fetchCars = async () => {
-    const url = "https://065c-116-127-186-66.ngrok-free.app/api/v1/car/list";
+    const url = "http://3.208.21.90:5000/api/v1/car/list";
 
     try {
         const response = await fetch(url);
@@ -20,7 +20,7 @@ export const fetchCars = async () => {
 
 
 export const fetchModels = async (model) => {
-    const url = `https://065c-116-127-186-66.ngrok-free.app/api/v1/car?model=${model}`;
+    const url = `http://3.208.21.90:5000/api/v1/car?model=${model}`;
 
     try {
         const response = await fetch(url);
@@ -43,7 +43,7 @@ export const fetchModels = async (model) => {
 export const fetchCarbonEmission = async (car, model, distance) => {
     try {
         const response = await fetch(
-            `https://065c-116-127-186-66.ngrok-free.app/api/v1/car/emission?car=${car}&version=${model}&distance=${distance}`
+            `http://3.208.21.90:5000/api/v1/car/emission?car=${car}&version=${model}&distance=${distance}`
         );
 
         if (!response.ok) {
@@ -62,7 +62,7 @@ export const fetchCarbonEmission = async (car, model, distance) => {
 export const fetchCarbonEmissionForTransports = async (transport, distance) => {
     try {
         const response = await fetch(
-            `https://065c-116-127-186-66.ngrok-free.app/api/v1/emission?transport=${transport}&distance=${distance}`
+            `http://3.208.21.90:5000/api/v1/emission?transport=${transport}&distance=${distance}`
         );
 
         if (!response.ok) {

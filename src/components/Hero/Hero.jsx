@@ -5,7 +5,7 @@ import herobg from '../../assets/bg.png'
 import Header from '../Header/Header'
 import TextTransition, { presets } from 'react-text-transition';
 
-const TEXTS = ['Planet', 'Nature'];
+const TEXTS = ['Planet', 'Nature', 'Future'];
 
 const Hero = () => {
     const [index, setIndex] = React.useState(0);

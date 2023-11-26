@@ -368,7 +368,7 @@ const Home = () => {
                 mapContainerStyle={{
                   width: "800px",
                   height: "600px",
-                  borderRadius: "30px",
+                  borderRadius: "20px",
                   marginBottom: "50px",
                 }}
                 center={{ lat: 37.4979, lng: 127.0276 }}
@@ -386,22 +386,24 @@ const Home = () => {
                   />
                 )}
               </GoogleMap>
-              <div className="h-full flex-col items-center justify-center text-[90px] font-bold opacity-80">
-                {emission !== 0 && (
-                  <div
-                    className={
-                      emission > 4
-                        ? `text-[#FF0000]`
-                        : emission < 2
-                        ? `  text-[#54B435]`
-                        : `text-[#F4CE14]`
-                    }
-                  >
-                    <CountUp start={0} end={emission} duration={2} />
-                    kg
-                  </div>
-                )}
-                <div className="">
+              <div className="h-full flex flex-col items-center justify-between text-4xl font-bold opacity-80 text-black">
+                <p className="pt-16 max-w-[350px] text-center"> You will produce
+                  {!emission !== 0 && (
+                    <div
+                      className={
+                        emission > 4
+                          ? `text-[#FF0000] font-extrabold text-[80px] my-7`
+                          : emission < 2
+                            ? `  text-[#449C31]  font-extrabold text-[60px] my-7`
+                            : `text-[#F4CE14  font-extrabold text-[70px] my-7]`
+                      }
+                    >
+                      <CountUp start={0} end={emission} duration={2} />
+                      kg
+                    </div>
+                  )} of carbon footprint
+                </p>
+                <div className="mt-auto">
                   <img className="w-[550px]" src={earthImg} alt="plant" />
                 </div>
               </div>

@@ -34,7 +34,7 @@ const Hero = () => {
                             Save the <span className='text-dark-green'><TextTransition springConfig={presets.stiff}>{TEXTS[index % TEXTS.length]}</TextTransition></span>
                         </h1>
                         <p className='text-lg text-white max-w-[500px] mb-10'>Use our interactive calculator to learn your carbon footprint and actions to take to reduce it.</p>
-                        <a href='#mapsection'> <Button type='primary' text='Get Start' /></a>
+                        <a href='#mapsection'> <Button type='primary' text='Calculate now!' /></a>
                     </div>
                     <div className='w-1/2'>
                         <div className='w-[400px] md:w-[600px] ml-0 md:ml-auto'>

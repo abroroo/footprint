@@ -7,8 +7,9 @@ import {
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import Hero from "../components/Hero/Hero";
-import carbonBg from '../assets/leavesbg.png'
-import earthImg from '../assets/Save-Earth-Free-PNG-Image 1.svg'
+import carbonBg from "../assets/leavesbg.png";
+import earthImg from "../assets/Save-Earth-Free-PNG-Image 1.svg";
+import CountUp from "react-countup";
 
 import {
   fetchCars,
@@ -99,7 +100,6 @@ const Home = () => {
       </Autocomplete>
     );
   }, [to]);
-
 
   const handleTransportChange = (e) => {
     setSelectedTransport(e.target.value);
@@ -203,14 +203,18 @@ const Home = () => {
   return (
     <div className="mx-auto w-screen">
       <Hero />
-      <section id="mapsection" className="min-h-screen flex justify-center items-center" style={{
-        backgroundImage: `url(${carbonBg})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: 'center center',
-        width: '100%',
-        height: '100%',
-      }}>
+      <section
+        id="mapsection"
+        className="min-h-screen flex justify-center items-center"
+        style={{
+          backgroundImage: `url(${carbonBg})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          width: "100%",
+          height: "100%",
+        }}
+      >
         <div className="flex flex-col justify-between mb-4 w-full container mx-auto px-2 md:px-5 h-[850px] rounded-xl shadow-inner drop-shadow-md bg-slate-600/30 backdrop-blur-md">
           <LoadScript googleMapsApiKey={apiKey} libraries={libraries}>
             {/* Transport Type Dropdown */}
@@ -251,7 +255,6 @@ const Home = () => {
                   </div>
                   {selectedTransport && (
                     <div className="relative">
-
                       <select
                         value={selectedModel}
                         className="h-12 w-[200px] text-black text-xl font-semibold bg-white rounded-xl drop-shadow-md flex items-center justify-between px-5 appearance-none"
@@ -287,6 +290,7 @@ const Home = () => {
 
                 <div className="grid grid-cols-2 gap-3 relative text-left">
                   <div className="h-12 w-[200px] text-black text-xl font-semibold bg-white rounded-xl drop-shadow-md flex items-center justify-between px-5 appearance-none">
+                    {" "}
                     Train
                     <input
                       value="train"
@@ -365,7 +369,7 @@ const Home = () => {
                   width: "800px",
                   height: "600px",
                   borderRadius: "30px",
-                  marginBottom: '50px'
+                  marginBottom: "50px",
                 }}
                 center={{ lat: 37.4979, lng: 127.0276 }}
                 zoom={15}
@@ -382,8 +386,24 @@ const Home = () => {
                   />
                 )}
               </GoogleMap>
-              <div className="">
-                <img className="w-[550px]" src={earthImg} alt='plant' />
+              <div className="h-full flex-col items-center justify-center text-[90px] font-bold opacity-80">
+                {emission !== 0 && (
+                  <div
+                    className={
+                      emission > 4
+                        ? `text-[#FF0000]`
+                        : emission < 2
+                        ? `  text-[#54B435]`
+                        : `text-[#F4CE14]`
+                    }
+                  >
+                    <CountUp start={0} end={emission} duration={2} />
+                    kg
+                  </div>
+                )}
+                <div className="">
+                  <img className="w-[550px]" src={earthImg} alt="plant" />
+                </div>
               </div>
             </div>
           </LoadScript>

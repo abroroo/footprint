@@ -10,6 +10,7 @@
     "framer-motion": "^10.16.5",
     "geolib": "^3.3.4",
     "react": "^18.2.0",
+    "react-countup": "^6.5.0",
     "react-dom": "^18.2.0",
     "react-google-maps-api": "^1.0.8",
     "react-kakao-maps-sdk": "^1.1.24",

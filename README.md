@@ -1,7 +1,7 @@
 ## Carbon Footprint Calculater based on the Vehicle and Distance Traveled
 
 
-This repo is frontend of a project built by CodeHackers team at [Seoul Tech Impact Hackaton](https://www.seoultechimpact.com/) 
+This repo is the frontend of a project built by CodeHackers team at [Seoul Tech Impact Hackaton](https://www.seoultechimpact.com/) 
 
 
 ## User Story

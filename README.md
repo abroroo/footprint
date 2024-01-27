@@ -1,7 +1,7 @@
 ## Carbon Footprint Calculater based on the Vehicle and Distance Traveled
 
 
-__This project was built by CodeHackers team at Seoul Tech Impact Hackaton__ 
+This repo is frontend of a project built by CodeHackers team at [Seoul Tech Impact Hackaton](https://www.seoultechimpact.com/) 
 
 
 ## User Story
@@ -16,5 +16,6 @@ So we developed our own **carbon footprint calculator** for specific car models.
 
 ## Demo 
 
+![Demo of Carbon FootPrint Calculator](https://github.com/abroroo/footprint/Demo.mp4)
 
 

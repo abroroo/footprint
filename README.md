@@ -16,7 +16,7 @@ So we developed our own **carbon footprint calculator** for specific car models.
 
 ## Demo 
 
-![Demo Gif](https://github.com/abroroo/footprint/Demo.gif)
+![Demo Gif](https://github.com/abroroo/footprint/blob/main/Demo.gif?raw=true)
 
 
 
